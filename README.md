@@ -1,4 +1,8 @@
-# BootstrapSearch
+
+<div class="d-flex justify-content-center align-items-center mb-5">
+    <img src="public/logo.png" class="img-responsive" style="width: 150px" alt="BootstrapSearch Logo">
+    <h1>BootstrapSearch</h1>
+</div>
 
 **BootstrapSearch** is a fork of [bootstrap-5-autocomplete](https://github.com/gch1p/bootstrap-5-autocomplete) that enhances the functionality with AJAX support, customizable label/value mapping, loading and success indicators, keyboard navigation, and multi-select capabilities.
 
