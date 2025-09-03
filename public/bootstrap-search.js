@@ -78,12 +78,18 @@ class BootstrapSearch {
             }
         });
 
-
         field.addEventListener('keydown', (e) => this.handleKeydown(e));
 
         document.addEventListener('click', (e) => {
             if (!this.dropdownDiv.contains(e.target) && e.target !== this.field) {
                 this.dropdown.hide();
+            }
+        });
+
+        field.addEventListener('focus', () => {
+            if (this.selectedItems.length) {
+                this.renderIfNeeded();
+                this.dropdown.show();
             }
         });
     }
