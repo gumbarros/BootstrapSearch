@@ -21,7 +21,7 @@
 
 ## Installation
 
-Include Bootstrap 5.3 and FontAwesome in your project, then include `bootstrap-search.js`:
+Include Bootstrap 5.3 and FontAwesome in your project, then include [`bootstrap-search.js`](https://raw.githubusercontent.com/gumbarros/BootstrapSearch/refs/heads/main/public/bootstrap-search.js) at your project:
 
 ```html
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
