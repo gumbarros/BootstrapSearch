@@ -72,7 +72,7 @@ class BootstrapSearch {
 
             if (this.options.ajax) {
                 if (this.field.value.length >= this.options.threshold) this.showLoading();
-                this.fetchData(this.field.value);
+                this.fetchData(this.field.value).then(_=>this.renderIfNeeded());
             } else {
                 this.renderIfNeeded();
             }
@@ -136,6 +136,10 @@ class BootstrapSearch {
         this.statusIcon.innerHTML = `<i class="fas fa-check text-success"></i>`;
     }
 
+    showNoResults() {
+        this.statusIcon.innerHTML = `<i class="fas fa-times text-secondary"></i>`;
+    }
+
     clearStatus() {
         this.statusIcon.innerHTML = '';
     }
@@ -167,12 +171,14 @@ class BootstrapSearch {
     }
 
     renderIfNeeded() {
-        if (this.createItems() > 0){
-          this.dropdown.show();
+        const count = this.createItems();
+        if (count > 0) {
+            this.dropdown.show();
+            this.setDefaultIcon();
+        } else {
+            this.dropdown.hide();
+            this.showNoResults(); 
         }
-        else{
-          this.dropdown.hide();
-        } 
     }
 
     createItem(lookup, item) {
