@@ -147,4 +147,4 @@ Help contributing to the library with these missing things:
 - Add unit tests and continuous integration
 
 ## Special Thanks
-Thanks to @gch1p for the original library, without it, this would have been impossible :)
+Thanks to [@gch1p](https://github.com/gch1p) for the original library, without it, this would have been impossible :)
