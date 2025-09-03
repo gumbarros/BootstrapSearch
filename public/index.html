@@ -108,20 +108,41 @@
                             <input type="text" class="form-control" id="example3" placeholder="Select a dish..."
                                 autocomplete="off">
                             <pre><code class="language-js" id="code3">
-const foods = [
-    { id: 1, name: "Empanadas", country: "Argentina" },
-    { id: 2, name: "Pastel de Nata", country: "Portugal" },
-    { id: 3, name: "Pulpo a la Gallega", country: "Spain" },
-    { id: 4, name: "Completo", country: "Chile" },
-    { id: 5, name: "Tacos al Pastor", country: "Mexico" },
-    { id: 6, name: "Tapioca", country: "Brazil" }
-];
+const names = [
+    { id: 1, name: "Walter White" },
+    { id: 2, name: "Jesse Pinkman" },
+    { id: 3, name: "Saul Goodman" },
+    { id: 4, name: "Gustavo Fring" },
+    { id: 5, name: "Skyler White" },
+    { id: 6, name: "Hank Schrader" },
+    { id: 7, name: "Mike Ehrmantraut" },
+    { id: 8, name: "Tuco Salamanca" },
+    { id: 9, name: "Chuck McGill" },
+    { id: 10, name: "Luke Skywalker" },
+    { id: 11, name: "Darth Vader" },
+    { id: 12, name: "Leia Organa" },
+    { id: 13, name: "Han Solo" },
+    { id: 14, name: "Obi-Wan Kenobi" },
+    { id: 15, name: "Yoda" },
+    { id: 16, name: "Anakin Skywalker" },
+    { id: 17, name: "Michael Scott" },
+    { id: 18, name: "Dwight Schrute" },
+    { id: 19, name: "Jim Halpert" },
+    { id: 20, name: "Pam Beesly" },
+    { id: 21, name: "Stanley Hudson" },
+    { id: 22, name: "Kevin Malone" },
+    { id: 23, name: "Angela Martin" },
+    { id: 24, name: "Creed Bratton" },
+    { id: 25, name: "Oscar Martinez" },
+    { id: 26, name: "Gustavo Barros" }
+]
+
 
 const ac = new BootstrapSearch(document.getElementById('example3'), {
-    data: foods,
+    data: names,
     inputLabel: 'name',
     dropdownLabel: 'name',
-    value: 'country',
+    value: 'id',
     onSelectItem: item =&gt; console.log('Selected Local:', item)
 });
                         </code></pre>
@@ -214,14 +235,34 @@ const ac = new BootstrapSearch(document.getElementById('example4'), {
         <script>
             hljs.highlightAll();
 
-            const foods = [
-                { id: 1, name: "Empanadas", country: "Argentina" },
-                { id: 2, name: "Pastel de Nata", country: "Portugal" },
-                { id: 3, name: "Pulpo a la Gallega", country: "Spain" },
-                { id: 4, name: "Completo", country: "Chile" },
-                { id: 5, name: "Tacos al Pastor", country: "Mexico" },
-                { id: 6, name: "Tapioca", country: "Brazil" }
-            ];
+            const names = [
+                { id: 1, name: "Walter White" },
+                { id: 2, name: "Jesse Pinkman" },
+                { id: 3, name: "Saul Goodman" },
+                { id: 4, name: "Gustavo Fring" },
+                { id: 5, name: "Skyler White" },
+                { id: 6, name: "Hank Schrader" },
+                { id: 7, name: "Mike Ehrmantraut" },
+                { id: 8, name: "Tuco Salamanca" },
+                { id: 9, name: "Chuck McGill" },
+                { id: 10, name: "Luke Skywalker" },
+                { id: 11, name: "Darth Vader" },
+                { id: 12, name: "Leia Organa" },
+                { id: 13, name: "Han Solo" },
+                { id: 14, name: "Obi-Wan Kenobi" },
+                { id: 15, name: "Yoda" },
+                { id: 16, name: "Anakin Skywalker" },
+                { id: 17, name: "Michael Scott" },
+                { id: 18, name: "Dwight Schrute" },
+                { id: 19, name: "Jim Halpert" },
+                { id: 20, name: "Pam Beesly" },
+                { id: 21, name: "Stanley Hudson" },
+                { id: 22, name: "Kevin Malone" },
+                { id: 23, name: "Angela Martin" },
+                { id: 24, name: "Creed Bratton" },
+                { id: 25, name: "Oscar Martinez" },
+                { id: 26, name: "Gustavo Barros" }
+            ]
 
             new BootstrapSearch(document.getElementById('example1'), {
                 ajax: q => `https://dummyjson.com/users/search?q=${q}`,
@@ -245,10 +286,10 @@ const ac = new BootstrapSearch(document.getElementById('example4'), {
             });
 
             new BootstrapSearch(document.getElementById('example3'), {
-                data: foods,
+                data: names,
                 inputLabel: 'name',
                 dropdownLabel: 'name',
-                value: 'country',
+                value: 'id',
                 onSelectItem: item => console.log('Selected Local:', item)
             });
 
