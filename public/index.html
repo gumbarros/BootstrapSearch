@@ -21,6 +21,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script src="bootstrap-search.js"></script>
+
+    <meta property="og:title" content="BootstrapSearch – AJAX & Local Autocomplete for Bootstrap 5">
+    <meta property="og:description" content="BootstrapSearch is a fork of bootstrap-5-autocomplete featuring AJAX support, local data search, multi-select, and customizable dropdowns.">
+    <meta property="og:image" content="https://gumbarros.github.io/BootstrapSearch/logo.png">
+    <meta property="og:url" content="https://gumbarros.github.io/BootstrapSearch">
+    <meta property="og:type" content="website">
+
     <style>
         body {
             transition: background-color 0.3s, color 0.3s;
@@ -117,24 +124,28 @@ const names = [
     { id: 6, name: "Hank Schrader" },
     { id: 7, name: "Mike Ehrmantraut" },
     { id: 8, name: "Tuco Salamanca" },
-    { id: 9, name: "Chuck McGill" },
-    { id: 10, name: "Luke Skywalker" },
-    { id: 11, name: "Darth Vader" },
-    { id: 12, name: "Leia Organa" },
-    { id: 13, name: "Han Solo" },
-    { id: 14, name: "Obi-Wan Kenobi" },
-    { id: 15, name: "Yoda" },
-    { id: 16, name: "Anakin Skywalker" },
-    { id: 17, name: "Michael Scott" },
-    { id: 18, name: "Dwight Schrute" },
-    { id: 19, name: "Jim Halpert" },
-    { id: 20, name: "Pam Beesly" },
-    { id: 21, name: "Stanley Hudson" },
-    { id: 22, name: "Kevin Malone" },
-    { id: 23, name: "Angela Martin" },
-    { id: 24, name: "Creed Bratton" },
-    { id: 25, name: "Oscar Martinez" },
-    { id: 26, name: "Gustavo Barros" }
+    { id: 9, name: "Lalo Salamanca" },
+    { id: 10, name: "Chuck McGill" },
+    { id: 11, name: "Luke Skywalker" },
+    { id: 12, name: "Darth Vader" },
+    { id: 13, name: "Leia Organa" },
+    { id: 14, name: "Han Solo" },
+    { id: 15, name: "Obi-Wan Kenobi" },
+    { id: 16, name: "Yoda" },
+    { id: 17, name: "Anakin Skywalker" },
+    { id: 18, name: "Cassian Andor" },
+    { id: 19, name: "Darth Revan" },
+    { id: 20, name: "Baby Yoda" },
+    { id: 21, name: "Michael Scott" },
+    { id: 22, name: "Dwight Schrute" },
+    { id: 23, name: "Jim Halpert" },
+    { id: 24, name: "Pam Beesly" },
+    { id: 25, name: "Stanley Hudson" },
+    { id: 26, name: "Kevin Malone" },
+    { id: 27, name: "Angela Martin" },
+    { id: 28, name: "Creed Bratton" },
+    { id: 29, name: "Oscar Martinez" },
+    { id: 30, name: "Gustavo Barros" }
 ]
 
 
@@ -244,25 +255,30 @@ const ac = new BootstrapSearch(document.getElementById('example4'), {
                 { id: 6, name: "Hank Schrader" },
                 { id: 7, name: "Mike Ehrmantraut" },
                 { id: 8, name: "Tuco Salamanca" },
-                { id: 9, name: "Chuck McGill" },
-                { id: 10, name: "Luke Skywalker" },
-                { id: 11, name: "Darth Vader" },
-                { id: 12, name: "Leia Organa" },
-                { id: 13, name: "Han Solo" },
-                { id: 14, name: "Obi-Wan Kenobi" },
-                { id: 15, name: "Yoda" },
-                { id: 16, name: "Anakin Skywalker" },
-                { id: 17, name: "Michael Scott" },
-                { id: 18, name: "Dwight Schrute" },
-                { id: 19, name: "Jim Halpert" },
-                { id: 20, name: "Pam Beesly" },
-                { id: 21, name: "Stanley Hudson" },
-                { id: 22, name: "Kevin Malone" },
-                { id: 23, name: "Angela Martin" },
-                { id: 24, name: "Creed Bratton" },
-                { id: 25, name: "Oscar Martinez" },
-                { id: 26, name: "Gustavo Barros" }
+                { id: 9, name: "Lalo Salamanca" },
+                { id: 10, name: "Chuck McGill" },
+                { id: 11, name: "Luke Skywalker" },
+                { id: 12, name: "Darth Vader" },
+                { id: 13, name: "Leia Organa" },
+                { id: 14, name: "Han Solo" },
+                { id: 15, name: "Obi-Wan Kenobi" },
+                { id: 16, name: "Yoda" },
+                { id: 17, name: "Anakin Skywalker" },
+                { id: 18, name: "Cassian Andor" },
+                { id: 19, name: "Darth Revan" },
+                { id: 20, name: "Baby Yoda" },
+                { id: 21, name: "Michael Scott" },
+                { id: 22, name: "Dwight Schrute" },
+                { id: 23, name: "Jim Halpert" },
+                { id: 24, name: "Pam Beesly" },
+                { id: 25, name: "Stanley Hudson" },
+                { id: 26, name: "Kevin Malone" },
+                { id: 27, name: "Angela Martin" },
+                { id: 28, name: "Creed Bratton" },
+                { id: 29, name: "Oscar Martinez" },
+                { id: 30, name: "Gustavo Barros" }
             ]
+
 
             new BootstrapSearch(document.getElementById('example1'), {
                 ajax: q => `https://dummyjson.com/users/search?q=${q}`,
