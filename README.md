@@ -126,16 +126,16 @@ new BootstrapSearch(document.getElementById('example4'), {
 | threshold            | Number of characters before searching                        | 2              |
 | highlightTyped       | Highlight typed text in dropdown                             | true           |
 | highlightClass       | CSS class(es) for highlight                                  | 'text-primary' |
-| inputLabel           | String key or lambda to set `input.value` when item selected | 'label'        |
-| dropdownLabel        | String key or lambda to render dropdown item (supports HTML) | 'label'        |
-| value                | String key or lambda to get value                            | 'value'        |
+| inputLabel           | String key or function to set `input.value` when item selected | 'label'        |
+| dropdownLabel        | String key or function to render dropdown item (supports HTML) | 'label'        |
+| value                | String key or function to get value                            | 'value'        |
 | showValue            | Show value alongside label in dropdown                       | false          |
 | showValueBeforeLabel | Show value before label in dropdown                          | false          |
-| ajax                 | URL string or lambda returning URL for AJAX request          | -              |
-| resolveData          | Lambda to transform AJAX response                            | -              |
+| ajax                 | URL string or function returning URL for AJAX request          | -              |
+| resolveData          | Function to transform AJAX response                            | -              |
 | onInput              | Callback on input change                                     | -              |
 | onSelectItem         | Callback when user selects an item                           | -              |
-| multiSelect          | Allow selecting multiple items with tags                     | false          |
+| multiSelect          | Allow selecting multiple items                               | false          |
 
 
 ## TODO
@@ -145,3 +145,6 @@ Help contributing to the library with these missing things:
 - Add a build system with support for CDNs and module bundlers
 - Extend accessibility and keyboard navigation
 - Add unit tests and continuous integration
+
+## Special Thanks
+Thanks to [@gch1p](https://github.com/gch1p) for the original library, without it, this would have been impossible :)
