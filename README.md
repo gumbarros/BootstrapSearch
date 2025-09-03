@@ -145,3 +145,6 @@ Help contributing to the library with these missing things:
 - Add a build system with support for CDNs and module bundlers
 - Extend accessibility and keyboard navigation
 - Add unit tests and continuous integration
+
+## Special Thanks
+Thanks to @gch1p for the original library, without it, this would have been impossible :)
