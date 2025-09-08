@@ -174,7 +174,7 @@ const ac = new BootstrapSearch(document.getElementById('example3'), {
                                 autocomplete="off">
                             <pre><code class="language-js" id="code1">
 const ac = new BootstrapSearch(document.getElementById('example1'), {
-    ajax: q =&gt; `https://dummyjson.com/users/search?q=${q}`,
+    remoteData: q =&gt; `https://dummyjson.com/users/search?q=${q}`,
     inputLabel: 'firstName',
     dropdownLabel: 'firstName',
     value: 'id',
@@ -194,7 +194,7 @@ const ac = new BootstrapSearch(document.getElementById('example1'), {
                                 autocomplete="off">
                             <pre><code class="language-js" id="code2">
 const ac = new BootstrapSearch(document.getElementById('example2'), {
-    ajax: q =&gt; `https://dummyjson.com/users/search?q=${q}`,
+    remoteData: q =&gt; `https://dummyjson.com/users/search?q=${q}`,
     inputLabel: item =&gt; `${item.firstName} ${item.lastName}`,
     dropdownLabel: item =&gt; {
         const imgUrl = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${item.id}`;
@@ -219,7 +219,7 @@ const ac = new BootstrapSearch(document.getElementById('example2'), {
                                 autocomplete="off">
                             <pre><code class="language-js" id="code4">
 const ac = new BootstrapSearch(document.getElementById('example4'), {
-    ajax: q =&gt; `https://dummyjson.com/users/search?q=${q}`,
+    remoteData: q =&gt; `https://dummyjson.com/users/search?q=${q}`,
     inputLabel: 'firstName',
     dropdownLabel: 'firstName',
     value: 'id',
@@ -286,7 +286,7 @@ const ac = new BootstrapSearch(document.getElementById('example4'), {
 
 
             new BootstrapSearch(document.getElementById('example1'), {
-                ajax: q => `https://dummyjson.com/users/search?q=${q}`,
+                remoteData: q => `https://dummyjson.com/users/search?q=${q}`,
                 inputLabel: 'firstName',
                 dropdownLabel: 'firstName',
                 value: 'id',
@@ -295,7 +295,7 @@ const ac = new BootstrapSearch(document.getElementById('example4'), {
             });
 
             new BootstrapSearch(document.getElementById('example2'), {
-                ajax: q => `https://dummyjson.com/users/search?q=${q}`,
+                remoteData: q => `https://dummyjson.com/users/search?q=${q}`,
                 inputLabel: item => `${item.firstName} ${item.lastName}`,
                 dropdownLabel: item => {
                     const imgUrl = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${item.id}`;
@@ -315,7 +315,7 @@ const ac = new BootstrapSearch(document.getElementById('example4'), {
             });
 
             new BootstrapSearch(document.getElementById('example4'), {
-                ajax: q => `https://dummyjson.com/users/search?q=${q}`,
+                remoteData: q => `https://dummyjson.com/users/search?q=${q}`,
                 inputLabel: 'firstName',
                 dropdownLabel: 'firstName',
                 value: 'id',

@@ -8,7 +8,7 @@ const DEFAULTS = {
     value: 'value',
     showValue: false,
     showValueBeforeLabel: false,
-    ajax: null,
+    remoteData: null,
     resolveData: (response) => response,
     onInput: null,
     onSelectItem: null,
@@ -70,7 +70,7 @@ class BootstrapSearch {
 
             if (this.options.onInput) this.options.onInput(this.field.value);
 
-            if (this.options.ajax) {
+            if (this.options.remoteData) {
                 if (this.field.value.length >= this.options.threshold) this.showLoading();
                 this.fetchData(this.field.value).then(_=>this.renderIfNeeded());
             } else {
@@ -153,7 +153,7 @@ class BootstrapSearch {
         if (this.controller) this.controller.abort();
         this.controller = new AbortController();
         try {
-            const url = typeof this.options.ajax === 'function' ? this.options.ajax(query) : this.options.ajax;
+            const url = typeof this.options.remoteData === 'function' ? this.options.remoteData(query) : this.options.remoteData;
             const response = await fetch(url, { signal: this.controller.signal });
             const data = await response.json();
             this.setData(this.options.resolveData(data));
