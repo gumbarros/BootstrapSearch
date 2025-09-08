@@ -68,10 +68,8 @@ class BootstrapSearch {
                 this.options.onSelectItem && this.options.onSelectItem([]);
             }
             else{
-                if (this.selectedItems.length) {
-                    this.selectedItems = [];
-                    this.options.onSelectItem && this.options.onSelectItem(null);
-                }
+                this.selectedItems = [];
+                this.options.onSelectItem && this.options.onSelectItem(null);
             }
             
             this.clearStatus();
