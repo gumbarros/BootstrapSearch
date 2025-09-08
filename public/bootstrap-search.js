@@ -234,6 +234,10 @@ class BootstrapSearch {
             labelHtml = itemLabel;
         }
 
+        if (typeof this.options.dropdownLabel !== 'function') {
+            labelHtml = `<div>${labelHtml}</div>`;
+        }
+
         if (this.options.showValue) {
             const val = typeof this.options.value === 'function'
                 ? this.options.value(item)
@@ -263,6 +267,7 @@ class BootstrapSearch {
 
         return btn;
     }
+
 
 
     createItems() {
