@@ -69,7 +69,7 @@ new BootstrapSearch(document.getElementById('example3'), {
 
 ```js
 new BootstrapSearch(document.getElementById('example1'), {
-    ajax: q => `https://dummyjson.com/users/search?q=${q}`,
+    remoteData: q => `https://dummyjson.com/users/search?q=${q}`,
     inputLabel: 'firstName',
     dropdownLabel: 'firstName',
     value: 'id',
@@ -88,7 +88,7 @@ new BootstrapSearch(document.getElementById('example1'), {
 
 ```js
 new BootstrapSearch(document.getElementById('example2'), {
-    ajax: q => `https://dummyjson.com/users/search?q=${q}`,
+    remoteData: q => `https://dummyjson.com/users/search?q=${q}`,
     inputLabel: item => `${item.firstName} ${item.lastName}`,
     dropdownLabel: item => {
         const imgUrl = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${item.id}`;
@@ -110,7 +110,7 @@ new BootstrapSearch(document.getElementById('example2'), {
 
 ```js
 new BootstrapSearch(document.getElementById('example4'), {
-    ajax: q => `https://dummyjson.com/users/search?q=${q}`,
+    remoteData: q => `https://dummyjson.com/users/search?q=${q}`,
     inputLabel: 'firstName',
     dropdownLabel: 'firstName',
     value: 'id',
@@ -131,7 +131,7 @@ new BootstrapSearch(document.getElementById('example4'), {
 | value                | String key or function to get value                            | 'value'        |
 | showValue            | Show value alongside label in dropdown                       | false          |
 | showValueBeforeLabel | Show value before label in dropdown                          | false          |
-| ajax                 | URL string or function returning URL for AJAX request          | -              |
+| remoteData                 | URL string or function returning URL for AJAX request          | -              |
 | resolveData          | Function to transform AJAX response                            | -              |
 | onInput              | Callback on input change                                     | -              |
 | onSelectItem         | Callback when user selects an item                           | -              |
