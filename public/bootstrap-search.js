@@ -36,9 +36,14 @@ class BootstrapSearch {
         this.statusIcon = document.createElement('span');
         this.statusIcon.className = 'position-absolute top-50 end-0 translate-middle-y pe-2';
         wrapper.appendChild(this.statusIcon);
-
-        this.setDefaultIcon();
-
+        
+        if(this.selectedItems.length > 0 || this.field.value) {
+            this.showSuccess();
+        }
+        else{
+            this.setDefaultIcon();
+        }
+        
         const dropdownDiv = document.createElement('div');
         dropdownDiv.className = 'dropdown-menu w-100';
         if (this.options.dropdownClass) dropdownDiv.classList.add(this.options.dropdownClass);
@@ -46,7 +51,7 @@ class BootstrapSearch {
         this.dropdownDiv = dropdownDiv;
 
         this.dropdown = new bootstrap.Dropdown(field, {
-            autoClose: this.options.multiSelect ? false : true
+            autoClose: !this.options.multiSelect
         });
 
         this.field.addEventListener('input', () => {
@@ -140,6 +145,10 @@ class BootstrapSearch {
         this.statusIcon.innerHTML = `<i class="fas fa-times text-secondary"></i>`;
     }
 
+    showError() {
+        this.statusIcon.innerHTML = `<i class="fas fa-times text-danger"></i>`;
+    }
+
     clearStatus() {
         this.statusIcon.innerHTML = '';
     }
@@ -153,15 +162,18 @@ class BootstrapSearch {
         if (this.controller) this.controller.abort();
         this.controller = new AbortController();
         try {
-            const url = typeof this.options.remoteData === 'function' ? this.options.remoteData(query) : this.options.remoteData;
+            const url = typeof this.options.remoteData === 'function' ? this.options.remoteData(encodeURIComponent(query)) : this.options.remoteData;
             const response = await fetch(url, { signal: this.controller.signal });
             const data = await response.json();
             this.setData(this.options.resolveData(data));
         } catch (err) {
-            if (err.name !== 'AbortError') console.error(err);
+            if (err.name !== 'AbortError') {
+                console.error(err);
+                this.showError();
+            }
         } finally {
-            this.clearStatus();
-            if (!this.selectedItems.length) this.setDefaultIcon();
+            if (!this.selectedItems.length)
+                this.setDefaultIcon();
         }
     }
 
@@ -177,7 +189,7 @@ class BootstrapSearch {
             this.setDefaultIcon();
         } else {
             this.dropdown.hide();
-            this.showNoResults(); 
+            this.showNoResults();
         }
     }
 
@@ -204,8 +216,8 @@ class BootstrapSearch {
 
             if (idx >= 0 && typeof this.options.dropdownLabel !== 'function') {
                 labelHtml = itemLabel.substring(0, idx) +
-                            `<span class="${escapeHtml(className)}">${escapeHtml(itemLabel.substring(idx, idx + lookup.length))}</span>` +
-                            escapeHtml(itemLabel.substring(idx + lookup.length));
+                    `<span class="${escapeHtml(className)}">${escapeHtml(itemLabel.substring(idx, idx + lookup.length))}</span>` +
+                    escapeHtml(itemLabel.substring(idx + lookup.length));
             } else {
                 labelHtml = itemLabel;
             }
@@ -305,9 +317,9 @@ class BootstrapSearch {
         });
 
         if (items.length > 0){
-          this.dropdown.show();
+            this.dropdown.show();
         } else {
-          this.dropdown.hide();
+            this.dropdown.hide();
         }
 
         return items.length;
