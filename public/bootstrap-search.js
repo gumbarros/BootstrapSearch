@@ -44,6 +44,7 @@ class BootstrapSearch {
             this.setDefaultIcon();
         }
         
+        
         const dropdownDiv = document.createElement('div');
         dropdownDiv.className = 'dropdown-menu w-100';
         if (this.options.dropdownClass) dropdownDiv.classList.add(this.options.dropdownClass);
@@ -59,15 +60,20 @@ class BootstrapSearch {
 
             this.activeIndex = -1;
 
-            if (this.selectedItems.length) {
-                this.selectedItems = [];
-                if (this.options.multiSelect) {
-                    this.options.onSelectItem && this.options.onSelectItem([]);
-                } else {
+            if (this.options.multiSelect) {
+                const currentValues = this.field.value.split(',').map(v => v.trim());
+                this.selectedItems = this.selectedItems.filter(si => currentValues.includes(si.label));
+                this.options.onSelectItem && this.options.onSelectItem([...this.selectedItems]);
+
+                this.options.onSelectItem && this.options.onSelectItem([]);
+            }
+            else{
+                if (this.selectedItems.length) {
+                    this.selectedItems = [];
                     this.options.onSelectItem && this.options.onSelectItem(null);
                 }
             }
-
+            
             this.clearStatus();
             this.setDefaultIcon();
 
@@ -154,6 +160,11 @@ class BootstrapSearch {
     }
 
     async fetchData(query) {
+        // If multiSelect, only use the text after the last comma
+        if (this.options.multiSelect) {
+            const parts = query.split(',');
+            query = parts[parts.length - 1].trim();
+        }
         if (query.length < this.options.threshold) {
             this.clearStatus();
             this.setDefaultIcon();
@@ -243,13 +254,13 @@ class BootstrapSearch {
 
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'dropdown-item';
+        btn.className = 'dropdown-item d-flex justify-content-between align-items-center';
         btn.setAttribute('data-label', escapeHtml(typeof this.options.inputLabel === 'function' ? this.options.inputLabel(item) : item[this.options.inputLabel] ?? ''));
         btn.setAttribute('data-value', dataValue);
         btn.innerHTML = labelHtml;
 
-        if (this.options.multiSelect && this.selectedItems.find(si => si.value == dataValue)) {
-            btn.innerHTML += ' <i class="fas fa-check text-success"></i>';
+        if (this.selectedItems.find(si => si.value == dataValue)) {
+            btn.innerHTML += ' <i class="fas fa-check fa-lg text-success"></i>';
         }
 
         return btn;
