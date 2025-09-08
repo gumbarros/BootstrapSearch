@@ -44,9 +44,11 @@ class BootstrapSearch {
             this.setDefaultIcon();
         }
         
-        
         const dropdownDiv = document.createElement('div');
         dropdownDiv.className = 'dropdown-menu w-100';
+        dropdownDiv.style.maxHeight = '250px';
+        dropdownDiv.style.overflowY = 'auto';
+
         if (this.options.dropdownClass) dropdownDiv.classList.add(this.options.dropdownClass);
         wrapper.appendChild(dropdownDiv);
         this.dropdownDiv = dropdownDiv;
@@ -101,6 +103,15 @@ class BootstrapSearch {
                 this.dropdown.show();
             }
         });
+
+        field.bootstrapSearch = this;
+    }
+
+    clear(){
+        this.selectedItems = [];
+        this.field.value = ''
+        this.setDefaultIcon();
+        this.dropdown.hide();
     }
 
     handleKeydown(e) {
