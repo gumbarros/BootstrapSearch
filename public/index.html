@@ -150,7 +150,8 @@ const names = [
     { id: 32, name: "Squidward" },
     { id: 33, name: "Thanos" },
     { id: 34, name: "Sergio" },
-    { id: 35, name: "Uncle Fa" }
+    { id: 35, name: "Uncle Fa" },
+    { id: 36, name: "Glupp Shitto"}
 ]
 
 
@@ -225,6 +226,7 @@ const ac = new BootstrapSearch(document.getElementById('example4'), {
     value: 'id',
     resolveData: res => res.users,
     multiSelect: true,
+    selectedItems: [{ id: "87", firstName: "Hunter" }, {id: "33", firstName: "Carter"}],
     onSelectItem: items =&gt; console.log('Selected Items:', items)
 });
                         </code></pre>
@@ -281,7 +283,13 @@ const ac = new BootstrapSearch(document.getElementById('example4'), {
                 { id: 27, name: "Angela Martin" },
                 { id: 28, name: "Creed Bratton" },
                 { id: 29, name: "Oscar Martinez" },
-                { id: 30, name: "Gustavo Barros" }
+                { id: 30, name: "Gustavo Barros" },
+                { id: 31, name: "Lucas Cherez" },
+                { id: 32, name: "Squidward" },
+                { id: 33, name: "Thanos" },
+                { id: 34, name: "Sergio" },
+                { id: 35, name: "Uncle Fa" },
+                { id: 36, name: "Glupp Shitto"}
             ]
 
 
@@ -321,6 +329,7 @@ const ac = new BootstrapSearch(document.getElementById('example4'), {
                 value: 'id',
                 resolveData: res => res.users,
                 multiSelect: true,
+                selectedItems: [{ id: "87", firstName: "Hunter" }, {id: "33", firstName: "Carter"}],
                 onSelectItem: items => console.log('Selected Items:', items)
             });
         </script>

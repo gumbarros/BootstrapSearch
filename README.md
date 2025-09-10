@@ -12,7 +12,7 @@
 
 * AJAX support for dynamic data fetching
 * Local data support
-* Multi-select with tags
+* Multi-select
 * Customizable dropdown and input labels (supports HTML)
 * Keyboard navigation
 * Highlight typed text in dropdown
@@ -141,7 +141,7 @@ new BootstrapSearch(document.getElementById('example4'), {
 ## TODO
 Help contributing to the library with these missing things:
 - Remove FontAwesome dependency by parametrizing icons
-- Migrate the codebase to TypeScript for type safety
+- Migrate the codebase to TypeScript for type safety and split into multiple files
 - Add a build system with support for CDNs and module bundlers
 - Extend accessibility and keyboard navigation
 - Add unit tests and continuous integration

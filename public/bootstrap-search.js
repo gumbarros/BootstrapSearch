@@ -9,11 +9,13 @@ const DEFAULTS = {
     showValue: false,
     showValueBeforeLabel: false,
     remoteData: null,
+    data: [],
     resolveData: (response) => response,
     onInput: null,
     onSelectItem: null,
     multiSelect: false,
-    dropdownClass: ''
+    dropdownClass: '',
+    selectedItems: []
 };
 
 class BootstrapSearch {
@@ -23,7 +25,16 @@ class BootstrapSearch {
         this.dropdown = null;
         this.controller = null;
         this.activeIndex = -1;
-        this.selectedItems = [];
+        this.selectedItems = (this.options.selectedItems || []).map(item => ({
+            value: typeof this.options.value === 'function' ? this.options.value(item) :
+                typeof this.options.value === 'string' ? item[this.options.value] ?? '' : item.value ?? '',
+            label: typeof this.options.inputLabel === 'function' ? this.options.inputLabel(item) :
+                typeof this.options.inputLabel === 'string' ? item[this.options.inputLabel] ?? '' : item.label ?? ''
+        }));
+        
+        if(this.options.data.length === 0)
+            this.options.data = [...this.options.selectedItems];
+
         this._updatingValue = false;
 
         field.classList.add('bootstrap-search-field', 'form-control');
@@ -49,7 +60,9 @@ class BootstrapSearch {
         dropdownDiv.style.maxHeight = '250px';
         dropdownDiv.style.overflowY = 'auto';
 
-        if (this.options.dropdownClass) dropdownDiv.classList.add(this.options.dropdownClass);
+        if (this.options.dropdownClass) 
+            dropdownDiv.classList.add(this.options.dropdownClass);
+
         wrapper.appendChild(dropdownDiv);
         this.dropdownDiv = dropdownDiv;
 
@@ -79,7 +92,8 @@ class BootstrapSearch {
 
             this.dropdownDiv.querySelectorAll('.dropdown-item i.fas.fa-check').forEach(icon => icon.remove());
 
-            if (this.options.onInput) this.options.onInput(this.field.value);
+            if (this.options.onInput) 
+                this.options.onInput(this.field.value);
 
             if (this.options.remoteData) {
                 if (this.field.value.length >= this.options.threshold) this.showLoading();
@@ -98,11 +112,19 @@ class BootstrapSearch {
         });
 
         field.addEventListener('focus', () => {
-            if (this.selectedItems.length) {
+            if (this.options.data && this.options.data.length) {
                 this.renderIfNeeded();
                 this.dropdown.show();
             }
         });
+
+        if (this.selectedItems.length > 0) {
+            this._updatingValue = true;
+            this.field.value = this.options.multiSelect
+                ? this.selectedItems.map(si => si.label).join(', ')
+                : this.selectedItems[0].label;
+            this._updatingValue = false;
+        }
 
         field.bootstrapSearch = this;
     }
@@ -145,7 +167,7 @@ class BootstrapSearch {
     }
 
     setDefaultIcon() {
-        this.statusIcon.innerHTML = `<i class="fas fa-search text-secondary"></i>`;
+        this.statusIcon.innerHTML = `<i class="fas fa-search"></i>`;
     }
 
     showLoading() {
@@ -153,11 +175,11 @@ class BootstrapSearch {
     }
 
     showSuccess() {
-        this.statusIcon.innerHTML = `<i class="fas fa-check text-success"></i>`;
+        this.statusIcon.innerHTML = `<i class="fas fa-check"></i>`;
     }
 
     showNoResults() {
-        this.statusIcon.innerHTML = `<i class="fas fa-times text-secondary"></i>`;
+        this.statusIcon.innerHTML = `<i class="fas fa-times"></i>`;
     }
 
     showError() {
@@ -169,7 +191,6 @@ class BootstrapSearch {
     }
 
     async fetchData(query) {
-        // If multiSelect, only use the text after the last comma
         if (this.options.multiSelect) {
             const parts = query.split(',');
             query = parts[parts.length - 1].trim();
@@ -206,7 +227,10 @@ class BootstrapSearch {
         const count = this.createItems();
         if (count > 0) {
             this.dropdown.show();
-            this.setDefaultIcon();
+
+            if(this.selectedItems.length == 0){
+                this.setDefaultIcon();
+            }
         } else {
             this.dropdown.hide();
             this.showNoResults();
@@ -224,9 +248,19 @@ class BootstrapSearch {
         }
 
         let labelHtml;
-        const itemLabel = typeof this.options.dropdownLabel === 'function'
-            ? this.options.dropdownLabel(item)
-            : escapeHtml(typeof this.options.dropdownLabel === 'string' ? item[this.options.dropdownLabel] ?? '' : item.label ?? '');
+      let itemLabel;
+
+        if (typeof this.options.dropdownLabel === 'function') {
+            itemLabel = this.options.dropdownLabel(item);
+        } 
+        else {
+            if (typeof this.options.dropdownLabel === 'string') {
+                itemLabel = escapeHtml(item[this.options.dropdownLabel] ?? '');
+            } else {
+                itemLabel = escapeHtml(item.label ?? '');
+            }
+        }
+
 
         if (this.options.highlightTyped && lookup) {
             const plainLabel = removeDiacritics(itemLabel).toLowerCase();
@@ -250,20 +284,34 @@ class BootstrapSearch {
         }
 
         if (this.options.showValue) {
-            const val = typeof this.options.value === 'function'
-                ? this.options.value(item)
-                : typeof this.options.value === 'string'
-                    ? item[this.options.value] ?? ''
-                    : item.value ?? '';
+            let val;
+
+            if (typeof this.options.value === 'function') {
+                val = this.options.value(item);
+            } else if (typeof this.options.value === 'string') {
+                val = item[this.options.value] ?? '';
+            } else {
+                val = item.value ?? '';
+            }
+
             const safeVal = escapeHtml(val);
-            labelHtml = this.options.showValueBeforeLabel ? `${safeVal} ${labelHtml}` : `${labelHtml} ${safeVal}`;
+            if (this.options.showValueBeforeLabel) {
+                labelHtml = `${safeVal} ${labelHtml}`;
+            } else {
+                labelHtml = `${labelHtml} ${safeVal}`;
+            }
         }
 
-        const dataValue = typeof this.options.value === 'function'
-            ? this.options.value(item)
-            : typeof this.options.value === 'string'
-                ? item[this.options.value] ?? ''
-                : item.value ?? '';
+        let dataValue;
+
+        if (typeof this.options.value === 'function') {
+            dataValue = this.options.value(item);
+        } else if (typeof this.options.value === 'string') {
+            dataValue = item[this.options.value] ?? '';
+        } else {
+            dataValue = item.value ?? '';
+        }
+
 
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -273,18 +321,17 @@ class BootstrapSearch {
         btn.innerHTML = labelHtml;
 
         if (this.selectedItems.find(si => si.value == dataValue)) {
-            btn.innerHTML += ' <i class="fas fa-check fa-lg text-success"></i>';
+            btn.innerHTML += ' <i class="fas fa-check fa-lg"></i>';
         }
 
         return btn;
     }
 
-
-
     createItems() {
         const dropdownDiv = this.dropdownDiv;
         dropdownDiv.innerHTML = '';
-        if (!this.options.data) return 0;
+        if (!this.options.data) 
+            return 0;
 
         const dataArray = Array.isArray(this.options.data) ? this.options.data : Object.values(this.options.data);
         let count = 0;
@@ -294,15 +341,30 @@ class BootstrapSearch {
                 dropdownDiv.appendChild(this.createItem(null, entry));
             } else {
                 const lookup = this.field.value;
-                const itemLabel = typeof this.options.dropdownLabel === 'function'
-                    ? this.options.dropdownLabel(entry)
-                    : typeof this.options.dropdownLabel === 'string'
-                        ? entry[this.options.dropdownLabel] ?? ''
-                        : entry.label ?? '';
+                let itemLabel;
+
+                if (typeof this.options.dropdownLabel === 'function') {
+                    itemLabel = this.options.dropdownLabel(entry);
+                } else {
+                    if (typeof this.options.dropdownLabel === 'string') {
+                        if (entry[this.options.dropdownLabel] !== undefined && entry[this.options.dropdownLabel] !== null) {
+                            itemLabel = entry[this.options.dropdownLabel];
+                        } else {
+                            itemLabel = '';
+                        }
+                    } else {
+                        if (entry.label !== undefined && entry.label !== null) {
+                            itemLabel = entry.label;
+                        } else {
+                            itemLabel = '';
+                        }
+                    }
+                }
 
                 if (removeDiacritics(itemLabel).toLowerCase().includes(removeDiacritics(lookup).toLowerCase())) {
                     dropdownDiv.appendChild(this.createItem(lookup, entry));
-                    if (this.options.maximumItems > 0 && ++count >= this.options.maximumItems) break;
+                    if (this.options.maximumItems > 0 && ++count >= this.options.maximumItems)
+                        break;
                 }
             }
         }
@@ -328,15 +390,23 @@ class BootstrapSearch {
                     this._updatingValue = false;
 
                     this.renderIfNeeded();
-                    if (this.selectedItems.length) this.showSuccess();
-                    else this.setDefaultIcon();
-                    if (this.options.onSelectItem) this.options.onSelectItem([...this.selectedItems]);
+                    if (this.selectedItems.length){
+                        this.showSuccess();
+                    }  
+                    else {
+                        this.setDefaultIcon();
+                    }
+                    if (this.options.onSelectItem){
+                        this.options.onSelectItem([...this.selectedItems]);
+                    } 
                 } else {
                     this.selectedItems = [{ value: dataValue, label: dataLabel }];
                     this.field.value = dataLabel;
                     this.dropdown.hide();
                     this.showSuccess();
-                    if (this.options.onSelectItem) this.options.onSelectItem(this.selectedItems[0]);
+                    if (this.options.onSelectItem){
+                        this.options.onSelectItem(this.selectedItems[0]);
+                    } 
                 }
             });
         });
