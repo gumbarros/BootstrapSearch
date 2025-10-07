@@ -9,6 +9,7 @@ const DEFAULTS = {
     showValue: false,
     showValueBeforeLabel: false,
     remoteData: null,
+    remoteDataHttpMethod: 'GET',
     data: [],
     resolveData: (response) => response,
     onInput: null,
@@ -203,8 +204,21 @@ class BootstrapSearch {
         if (this.controller) this.controller.abort();
         this.controller = new AbortController();
         try {
-            const url = typeof this.options.remoteData === 'function' ? this.options.remoteData(encodeURIComponent(query)) : this.options.remoteData;
-            const response = await fetch(url, { signal: this.controller.signal });
+            const method = (this.options.remoteDataHttpMethod || 'GET').toUpperCase();
+
+            let fetchOptions = { method, signal: this.controller.signal };
+
+            if (method === 'POST') {
+                let formData = new FormData();
+                const form = this.field.closest('form');
+                if (form) {
+                    new FormData(form).forEach((v, k) => formData.append(k, v));
+                }
+                formData.append('q', query);
+                fetchOptions.body = formData;
+            }
+
+            const response = await fetch(url, fetchOptions);
             const data = await response.json();
             this.setData(this.options.resolveData(data));
         } catch (err) {
