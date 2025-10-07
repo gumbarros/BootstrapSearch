@@ -204,6 +204,8 @@ class BootstrapSearch {
         if (this.controller) this.controller.abort();
         this.controller = new AbortController();
         try {
+            const url = typeof this.options.remoteData === 'function' ? this.options.remoteData(encodeURIComponent(query)) : this.options.remoteData;
+
             const method = (this.options.remoteDataHttpMethod || 'GET').toUpperCase();
 
             let fetchOptions = { method, signal: this.controller.signal };
