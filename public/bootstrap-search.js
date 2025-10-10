@@ -32,7 +32,7 @@ class BootstrapSearch {
             label: typeof this.options.inputLabel === 'function' ? this.options.inputLabel(item) :
                 typeof this.options.inputLabel === 'string' ? item[this.options.inputLabel] ?? '' : item.label ?? ''
         }));
-        
+
         if(this.options.data.length === 0)
             this.options.data = [...this.options.selectedItems];
 
@@ -48,20 +48,20 @@ class BootstrapSearch {
         this.statusIcon = document.createElement('span');
         this.statusIcon.className = 'position-absolute top-50 end-0 translate-middle-y pe-2';
         wrapper.appendChild(this.statusIcon);
-        
+
         if(this.selectedItems.length > 0 || this.field.value) {
             this.showSuccess();
         }
         else{
             this.setDefaultIcon();
         }
-        
+
         const dropdownDiv = document.createElement('div');
         dropdownDiv.className = 'dropdown-menu w-100';
         dropdownDiv.style.maxHeight = '250px';
         dropdownDiv.style.overflowY = 'auto';
 
-        if (this.options.dropdownClass) 
+        if (this.options.dropdownClass)
             dropdownDiv.classList.add(this.options.dropdownClass);
 
         wrapper.appendChild(dropdownDiv);
@@ -87,13 +87,13 @@ class BootstrapSearch {
                 this.selectedItems = [];
                 this.options.onSelectItem && this.options.onSelectItem(null);
             }
-            
+
             this.clearStatus();
             this.setDefaultIcon();
 
             this.dropdownDiv.querySelectorAll('.dropdown-item i.fas.fa-check').forEach(icon => icon.remove());
 
-            if (this.options.onInput) 
+            if (this.options.onInput)
                 this.options.onInput(this.field.value);
 
             if (this.options.remoteData) {
@@ -264,11 +264,11 @@ class BootstrapSearch {
         }
 
         let labelHtml;
-      let itemLabel;
+        let itemLabel;
 
         if (typeof this.options.dropdownLabel === 'function') {
             itemLabel = this.options.dropdownLabel(item);
-        } 
+        }
         else {
             if (typeof this.options.dropdownLabel === 'string') {
                 itemLabel = escapeHtml(item[this.options.dropdownLabel] ?? '');
@@ -346,7 +346,7 @@ class BootstrapSearch {
     createItems() {
         const dropdownDiv = this.dropdownDiv;
         dropdownDiv.innerHTML = '';
-        if (!this.options.data) 
+        if (!this.options.data)
             return 0;
 
         const dataArray = Array.isArray(this.options.data) ? this.options.data : Object.values(this.options.data);
@@ -387,44 +387,8 @@ class BootstrapSearch {
 
         const items = dropdownDiv.querySelectorAll('.dropdown-item');
         items.forEach(itemEl => {
-            itemEl.addEventListener('click', e => {
-                e.stopPropagation();
-
-                const dataLabel = e.currentTarget.getAttribute('data-label');
-                const dataValue = e.currentTarget.getAttribute('data-value');
-
-                if (this.options.multiSelect) {
-                    const exists = this.selectedItems.find(si => si.value == dataValue);
-                    if (!exists) {
-                        this.selectedItems.push({ value: dataValue, label: dataLabel });
-                    } else {
-                        this.selectedItems = this.selectedItems.filter(si => si.value != dataValue);
-                    }
-
-                    this._updatingValue = true;
-                    this.field.value = this.selectedItems.map(si => si.label).join(', ');
-                    this._updatingValue = false;
-
-                    this.renderIfNeeded();
-                    if (this.selectedItems.length){
-                        this.showSuccess();
-                    }  
-                    else {
-                        this.setDefaultIcon();
-                    }
-                    if (this.options.onSelectItem){
-                        this.options.onSelectItem([...this.selectedItems]);
-                    } 
-                } else {
-                    this.selectedItems = [{ value: dataValue, label: dataLabel }];
-                    this.field.value = dataLabel;
-                    this.dropdown.hide();
-                    this.showSuccess();
-                    if (this.options.onSelectItem){
-                        this.options.onSelectItem(this.selectedItems[0]);
-                    } 
-                }
-            });
+            itemEl.addEventListener('click', e => this.onItemSelected(e));
+            itemEl.addEventListener('contextmenu', e=> this.onItemSelected(e));
         });
 
         if (items.length > 0){
@@ -435,7 +399,47 @@ class BootstrapSearch {
 
         return items.length;
     }
+
+    onItemSelected(e){
+        e.stopPropagation();
+
+        const dataLabel = e.currentTarget.getAttribute('data-label');
+        const dataValue = e.currentTarget.getAttribute('data-value');
+
+        if (this.options.multiSelect) {
+            const exists = this.selectedItems.find(si => si.value == dataValue);
+            if (!exists) {
+                this.selectedItems.push({ value: dataValue, label: dataLabel });
+            } else {
+                this.selectedItems = this.selectedItems.filter(si => si.value != dataValue);
+            }
+
+            this._updatingValue = true;
+            this.field.value = this.selectedItems.map(si => si.label).join(', ');
+            this._updatingValue = false;
+
+            this.renderIfNeeded();
+            if (this.selectedItems.length){
+                this.showSuccess();
+            }
+            else {
+                this.setDefaultIcon();
+            }
+            if (this.options.onSelectItem){
+                this.options.onSelectItem([...this.selectedItems]);
+            }
+        } else {
+            this.selectedItems = [{ value: dataValue, label: dataLabel }];
+            this.field.value = dataLabel;
+            this.dropdown.hide();
+            this.showSuccess();
+            if (this.options.onSelectItem){
+                this.options.onSelectItem(this.selectedItems[0]);
+            }
+        }
+    }
 }
+
 
 function removeDiacritics(str) {
     return str?.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
