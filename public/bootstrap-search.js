@@ -388,6 +388,8 @@ class BootstrapSearch {
         const items = dropdownDiv.querySelectorAll('.dropdown-item');
         items.forEach(itemEl => {
             itemEl.addEventListener('click', e => this.onItemSelected(e));
+            itemEl.addEventListener('mousedown', handleClick);
+            itemEl.addEventListener('pointerdown', handleClick);
             itemEl.addEventListener('contextmenu', e=> this.onItemSelected(e));
         });
 
