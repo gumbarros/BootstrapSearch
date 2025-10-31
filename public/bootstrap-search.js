@@ -388,9 +388,6 @@ class BootstrapSearch {
         const items = dropdownDiv.querySelectorAll('.dropdown-item');
         items.forEach(itemEl => {
             itemEl.addEventListener('click', e => this.onItemSelected(e));
-            itemEl.addEventListener('mousedown', e => this.onItemSelected(e));
-            itemEl.addEventListener('pointerdown', e => this.onItemSelected(e));
-            itemEl.addEventListener('contextmenu', e=> this.onItemSelected(e));
         });
 
         if (items.length > 0){
@@ -403,8 +400,6 @@ class BootstrapSearch {
     }
 
     onItemSelected(e){
-        e.stopPropagation();
-
         const dataLabel = e.currentTarget.getAttribute('data-label');
         const dataValue = e.currentTarget.getAttribute('data-value');
 
