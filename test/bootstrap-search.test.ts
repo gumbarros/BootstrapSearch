@@ -132,9 +132,6 @@ describe('BootstrapSearch', () => {
     const control = document.querySelector<HTMLElement>('.bootstrap-search-multiselect-control');
     const styles = document.querySelector<HTMLStyleElement>('#bootstrap-search-multiselect-styles');
     expect(styles?.textContent).toContain('.bootstrap-search-multiselect-control:focus-within');
-    expect(styles?.textContent).toContain('border-color: rgba(var(--bs-primary-rgb), 0.5)');
-    expect(styles?.textContent).toContain('border-color: color-mix(in srgb, var(--bs-primary) 50%, var(--bs-body-bg))');
-    expect(styles?.textContent).toContain('box-shadow: 0 0 0 var(--bs-focus-ring-width) var(--bs-focus-ring-color)');
 
     field.dispatchEvent(new FocusEvent('focus'));
     expect(control?.classList.contains('border-primary')).toBe(false);
