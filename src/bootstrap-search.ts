@@ -19,10 +19,9 @@ const multiSelectControlFocusStyles = `
 .bootstrap-search-multiselect-control:focus-within {
   color: var(--bs-body-color);
   background-color: var(--bs-body-bg);
-  border-color: rgba(var(--bs-primary-rgb), 0.5);
-  border-color: color-mix(in srgb, var(--bs-primary) 50%, var(--bs-body-bg));
+  border-color: color-mix(in srgb, var(--bs-primary) 50%, transparent);
   outline: 0;
-  box-shadow: 0 0 0 var(--bs-focus-ring-width) var(--bs-focus-ring-color);
+  box-shadow: 0 0 0 .25rem rgba(var(--bs-primary-rgb), .25);
 }
 `;
 
