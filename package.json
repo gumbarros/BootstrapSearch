@@ -23,7 +23,8 @@
   ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
-    "build:demo": "npm run build && cp dist/bootstrap-search.js public/bootstrap-search.js && cp dist/bootstrap-search.min.js public/bootstrap-search.min.js",
+    "build:example": "vite build -c example/vite.config.ts",
+    "build:demo": "npm run build && cp dist/bootstrap-search.js public/bootstrap-search.js && cp dist/bootstrap-search.min.js public/bootstrap-search.min.js && npm run build:example",
     "check": "tsc --noEmit",
     "test": "vitest run"
   },
