@@ -16,12 +16,56 @@ import { appendMarkup, escapeHtml, removeDiacritics, toArray } from './utils';
 let instanceId = 0;
 const multiSelectStyleId = 'bootstrap-search-multiselect-styles';
 const multiSelectControlFocusStyles = `
+.bootstrap-search-multiselect-control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  min-height: calc(1.5em + 0.75rem + 2px);
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+}
+
+.bootstrap-search-multiselect-input {
+  flex: 1 1 8rem;
+  min-width: 8rem;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  font: inherit;
+}
+
+.bootstrap-search-multiselect-input:focus {
+  outline: 0;
+  box-shadow: none;
+}
+
+.bootstrap-search-selected-items {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.bootstrap-search-status-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
 .bootstrap-search-multiselect-control:focus-within {
   color: var(--bs-body-color);
   background-color: var(--bs-body-bg);
-  border-color: var(--bs-primary-border-subtle);
+  border-color: rgba(var(--bs-primary-rgb), 0.5);
+  border-color: color-mix(in srgb, var(--bs-primary) 50%, var(--bs-body-bg));
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+  box-shadow: 0 0 0 var(--bs-focus-ring-width) var(--bs-focus-ring-color);
 }
 `;
 
@@ -64,11 +108,7 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
     field.classList.add('bootstrap-search-field');
     if (this.options.multiSelect) {
       ensureMultiSelectControlStyles();
-      field.classList.add('bootstrap-search-multiselect-input', 'border-0', 'shadow-none', 'p-0', 'm-0', 'bg-transparent');
-      field.style.flex = '1 1 10rem';
-      field.style.minWidth = '8rem';
-      field.style.outline = '0';
-      field.style.color = 'inherit';
+      field.classList.add('bootstrap-search-multiselect-input');
     } else {
       field.classList.add('form-control');
     }
@@ -83,12 +123,11 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
 
     if (this.options.multiSelect) {
       this.multiSelectControl = document.createElement('div');
-      this.multiSelectControl.className = 'bootstrap-search-multiselect-control form-control d-flex flex-wrap align-items-center gap-2 pe-2';
-      this.multiSelectControl.style.minHeight = 'calc(1.5em + .75rem + 2px)';
+      this.multiSelectControl.className = 'bootstrap-search-multiselect-control form-control';
       this.multiSelectControl.addEventListener('click', () => this.field.focus());
 
       this.selectedItemsDiv = document.createElement('span');
-      this.selectedItemsDiv.className = 'bootstrap-search-selected-items d-inline-flex flex-wrap align-items-center gap-1';
+      this.selectedItemsDiv.className = 'bootstrap-search-selected-items';
       this.multiSelectControl.appendChild(this.selectedItemsDiv);
       this.multiSelectControl.appendChild(field);
       wrapper.appendChild(this.multiSelectControl);
@@ -98,7 +137,7 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
 
     this.statusIcon = document.createElement('span');
     this.statusIcon.className = this.options.multiSelect
-      ? 'bootstrap-search-status-icon ms-auto d-inline-flex align-items-center justify-content-center flex-shrink-0'
+      ? 'bootstrap-search-status-icon'
       : 'position-absolute top-50 end-0 translate-middle-y pe-2';
     this.statusIcon.setAttribute('aria-hidden', 'true');
     if (this.options.multiSelect) {

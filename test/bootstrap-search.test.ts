@@ -131,6 +131,7 @@ describe('BootstrapSearch', () => {
 
     const control = document.querySelector<HTMLElement>('.bootstrap-search-multiselect-control');
     const styles = document.querySelector<HTMLStyleElement>('#bootstrap-search-multiselect-styles');
+    expect(styles?.textContent).toContain('.bootstrap-search-multiselect-control {');
     expect(styles?.textContent).toContain('.bootstrap-search-multiselect-control:focus-within');
 
     field.dispatchEvent(new FocusEvent('focus'));
