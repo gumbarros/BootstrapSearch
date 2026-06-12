@@ -1,0 +1,41 @@
+{
+  "name": "bootstrap-search",
+  "version": "0.1.0",
+  "description": "Autocomplete and multi-select search component for Bootstrap 5.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/bootstrap-search.umd.cjs",
+  "module": "./dist/bootstrap-search.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/bootstrap-search.es.js",
+      "require": "./dist/bootstrap-search.umd.cjs"
+    }
+  },
+  "unpkg": "./dist/bootstrap-search.min.js",
+  "jsdelivr": "./dist/bootstrap-search.min.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "build:demo": "npm run build && cp dist/bootstrap-search.js public/bootstrap-search.js && cp dist/bootstrap-search.min.js public/bootstrap-search.min.js",
+    "check": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "bootstrap": ">=5.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "jsdom": "^24.1.0",
+    "typescript": "5.4.2",
+    "vite": "^5.3.3",
+    "vite-plugin-dts": "^3.9.1",
+    "vitest": "^1.6.0"
+  }
+}
