@@ -114,7 +114,7 @@ describe('BootstrapSearch', () => {
     expect(field.getAttribute('aria-expanded')).toBe('false');
   });
 
-  it('toggles multi-select items and updates aria-selected', () => {
+  it('shows multi-select selections as removable chips and updates aria-selected', () => {
     const field = createField();
     const onSelectItem = vi.fn();
     new BootstrapSearch<Person>(field, {
@@ -130,11 +130,26 @@ describe('BootstrapSearch', () => {
     });
 
     input(field, 'a');
+    expect(document.querySelector('.bootstrap-search-multiselect-control')?.classList.contains('show')).toBe(true);
+    document.querySelector<HTMLButtonElement>('.dropdown-item')?.click();
+    input(field, 'g');
     document.querySelector<HTMLButtonElement>('.dropdown-item')?.click();
 
-    expect(field.value).toBe('Ada');
-    expect(onSelectItem).toHaveBeenLastCalledWith([{ value: 1, label: 'Ada' }]);
-    expect(document.querySelector('.dropdown-item')?.getAttribute('aria-selected')).toBe('true');
+    expect(field.value).toBe('');
+    expect(onSelectItem).toHaveBeenLastCalledWith([
+      { value: 1, label: 'Ada' },
+      { value: 2, label: 'Grace' }
+    ]);
+    expect(document.querySelector('.bootstrap-search-multiselect-control')?.contains(field)).toBe(true);
+    expect(document.querySelectorAll('.bootstrap-search-selected-item')).toHaveLength(2);
+    expect(document.querySelector('.bootstrap-search-selected-items')?.textContent).toContain('Ada');
+    expect(document.querySelector('.bootstrap-search-selected-items')?.textContent).toContain('Grace');
+
+    document.querySelector<HTMLButtonElement>('.bootstrap-search-selected-remove')?.click();
+
+    expect(onSelectItem).toHaveBeenLastCalledWith([{ value: 2, label: 'Grace' }]);
+    expect(document.querySelectorAll('.bootstrap-search-selected-item')).toHaveLength(1);
+    expect(document.querySelector('.dropdown-item')?.getAttribute('aria-selected')).toBe('false');
   });
 
   it('filters multi-select local data by lookup and maximumItems', () => {
@@ -152,7 +167,7 @@ describe('BootstrapSearch', () => {
       maximumItems: 1
     });
 
-    input(field, 'Ada Lovelace, gra');
+    input(field, 'gra');
 
     const items = document.querySelectorAll('.dropdown-item');
     expect(items).toHaveLength(1);

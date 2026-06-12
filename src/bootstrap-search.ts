@@ -21,6 +21,8 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
   dropdownDiv: HTMLDivElement;
   statusIcon: HTMLSpanElement;
   dropdown: BootstrapDropdownInstance;
+  multiSelectControl: HTMLDivElement | null = null;
+  selectedItemsDiv: HTMLSpanElement | null = null;
   activeIndex = -1;
   selectedItems: SelectedItem[];
 
@@ -40,7 +42,16 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
 
     this.listboxId = `bootstrap-search-listbox-${++instanceId}`;
 
-    field.classList.add('bootstrap-search-field', 'form-control');
+    field.classList.add('bootstrap-search-field');
+    if (this.options.multiSelect) {
+      field.classList.add('bootstrap-search-multiselect-input', 'border-0', 'shadow-none', 'p-0', 'm-0', 'bg-transparent');
+      field.style.flex = '1 1 10rem';
+      field.style.minWidth = '8rem';
+      field.style.outline = '0';
+      field.style.color = 'inherit';
+    } else {
+      field.classList.add('form-control');
+    }
     field.setAttribute('role', 'combobox');
     field.setAttribute('aria-autocomplete', 'list');
     field.setAttribute('aria-expanded', 'false');
@@ -49,12 +60,32 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
     const wrapper = document.createElement('div');
     wrapper.className = 'position-relative';
     field.parentNode?.insertBefore(wrapper, field);
-    wrapper.appendChild(field);
+
+    if (this.options.multiSelect) {
+      this.multiSelectControl = document.createElement('div');
+      this.multiSelectControl.className = 'bootstrap-search-multiselect-control form-control d-flex flex-wrap align-items-center gap-2 pe-2';
+      this.multiSelectControl.style.minHeight = 'calc(1.5em + .75rem + 2px)';
+      this.multiSelectControl.addEventListener('click', () => this.field.focus());
+
+      this.selectedItemsDiv = document.createElement('span');
+      this.selectedItemsDiv.className = 'bootstrap-search-selected-items d-inline-flex flex-wrap align-items-center gap-1';
+      this.multiSelectControl.appendChild(this.selectedItemsDiv);
+      this.multiSelectControl.appendChild(field);
+      wrapper.appendChild(this.multiSelectControl);
+    } else {
+      wrapper.appendChild(field);
+    }
 
     this.statusIcon = document.createElement('span');
-    this.statusIcon.className = 'position-absolute top-50 end-0 translate-middle-y pe-2';
+    this.statusIcon.className = this.options.multiSelect
+      ? 'bootstrap-search-status-icon ms-auto d-inline-flex align-items-center justify-content-center flex-shrink-0'
+      : 'position-absolute top-50 end-0 translate-middle-y pe-2';
     this.statusIcon.setAttribute('aria-hidden', 'true');
-    wrapper.appendChild(this.statusIcon);
+    if (this.options.multiSelect) {
+      this.multiSelectControl?.appendChild(this.statusIcon);
+    } else {
+      wrapper.appendChild(this.statusIcon);
+    }
 
     this.dropdownDiv = document.createElement('div');
     this.dropdownDiv.id = this.listboxId;
@@ -72,10 +103,11 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
     }
 
     wrapper.appendChild(this.dropdownDiv);
-    this.dropdown = new bootstrap.Dropdown(field, { autoClose: !this.options.multiSelect });
+    this.dropdown = new bootstrap.Dropdown(this.multiSelectControl ?? field, { autoClose: !this.options.multiSelect });
 
     this.bindEvents();
     this.syncInitialValue();
+    this.renderSelectedItems();
     this.renderIcon(this.selectedItems.length > 0 || this.field.value ? 'success' : 'search');
 
     field.bootstrapSearch = this as BootstrapSearch<unknown>;
@@ -84,6 +116,7 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
   clear(): void {
     this.selectedItems = [];
     this.field.value = '';
+    this.renderSelectedItems();
     this.renderIcon('search');
     this.hideDropdown();
     this.clearActive();
@@ -175,13 +208,16 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
     this.field.addEventListener('input', () => this.handleInput());
     this.field.addEventListener('keydown', (event) => this.handleKeydown(event));
     this.field.addEventListener('focus', () => {
+      this.multiSelectControl?.classList.add('border-primary');
       if (toArray(this.options.data).length) {
         this.renderIfNeeded();
       }
     });
+    this.field.addEventListener('blur', () => this.multiSelectControl?.classList.remove('border-primary'));
 
     document.addEventListener('click', (event) => {
-      if (!this.dropdownDiv.contains(event.target as Node) && event.target !== this.field) {
+      const target = event.target as Node;
+      if (!this.dropdownDiv.contains(target) && target !== this.field && !this.multiSelectControl?.contains(target)) {
         this.hideDropdown();
       }
     });
@@ -193,9 +229,7 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
     this.clearActive();
 
     if (this.options.multiSelect) {
-      const currentValues = this.field.value.split(',').map((value) => value.trim());
-      this.selectedItems = this.selectedItems.filter((item) => currentValues.includes(item.label));
-      this.options.onSelectItem?.([...this.selectedItems]);
+      this.renderSelectedItems();
     } else {
       this.selectedItems = [];
       this.options.onSelectItem?.(null);
@@ -213,6 +247,54 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
     }
 
     this.renderIfNeeded();
+  }
+
+  private renderSelectedItems(): void {
+    if (!this.selectedItemsDiv) return;
+
+    this.selectedItemsDiv.replaceChildren();
+
+    if (this.selectedItems.length === 0) {
+      this.selectedItemsDiv.hidden = true;
+      return;
+    }
+
+    this.selectedItemsDiv.hidden = false;
+
+    this.selectedItems.forEach((item) => {
+      const chip = document.createElement('span');
+      chip.className = 'bootstrap-search-selected-item d-inline-flex align-items-center gap-2 rounded-pill border border-primary-subtle bg-primary-subtle text-primary-emphasis px-2 py-1';
+      chip.style.maxWidth = '100%';
+
+      const label = document.createElement('span');
+      label.className = 'small lh-sm text-truncate';
+      label.style.maxWidth = '14rem';
+      label.textContent = item.label;
+      chip.appendChild(label);
+
+      const removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.className = 'btn-close bootstrap-search-selected-remove';
+      removeButton.style.fontSize = '0.55rem';
+      removeButton.setAttribute('aria-label', `Remove ${item.label}`);
+      removeButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        this.removeSelectedItem(item.value);
+      });
+
+      chip.appendChild(removeButton);
+      this.selectedItemsDiv?.appendChild(chip);
+    });
+  }
+
+  private removeSelectedItem(value: ItemValue): void {
+    this.selectedItems = this.selectedItems.filter((item) => String(item.value) !== String(value));
+    this.renderSelectedItems();
+    this.renderIfNeeded();
+    this.renderIcon(this.selectedItems.length ? 'success' : 'search');
+    this.options.onSelectItem?.([...this.selectedItems]);
+    this.field.focus();
   }
 
   private handleKeydown(event: KeyboardEvent): void {
@@ -371,9 +453,10 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
       }
 
       this.updatingValue = true;
-      this.field.value = this.selectedItems.map((item) => item.label).join(', ');
+      this.field.value = '';
       this.updatingValue = false;
 
+      this.renderSelectedItems();
       this.renderIfNeeded();
       this.renderIcon(this.selectedItems.length ? 'success' : 'search');
       this.options.onSelectItem?.([...this.selectedItems]);
@@ -431,9 +514,7 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
     if (!this.selectedItems.length) return;
 
     this.updatingValue = true;
-    this.field.value = this.options.multiSelect
-      ? this.selectedItems.map((item) => item.label).join(', ')
-      : this.selectedItems[0].label;
+    this.field.value = this.options.multiSelect ? '' : this.selectedItems[0].label;
     this.updatingValue = false;
   }
 
