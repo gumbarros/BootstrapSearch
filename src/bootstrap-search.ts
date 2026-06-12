@@ -14,6 +14,26 @@ import type {
 import { appendMarkup, escapeHtml, removeDiacritics, toArray } from './utils';
 
 let instanceId = 0;
+const multiSelectStyleId = 'bootstrap-search-multiselect-styles';
+const multiSelectControlFocusStyles = `
+.bootstrap-search-multiselect-control:focus-within {
+  color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  border-color: rgba(var(--bs-primary-rgb), 0.5);
+  border-color: color-mix(in srgb, var(--bs-primary) 50%, var(--bs-body-bg));
+  outline: 0;
+  box-shadow: 0 0 0 var(--bs-focus-ring-width) var(--bs-focus-ring-color);
+}
+`;
+
+function ensureMultiSelectControlStyles(): void {
+  if (document.getElementById(multiSelectStyleId)) return;
+
+  const style = document.createElement('style');
+  style.id = multiSelectStyleId;
+  style.textContent = multiSelectControlFocusStyles;
+  document.head.appendChild(style);
+}
 
 export class BootstrapSearch<TItem = Record<string, unknown>> {
   field: HTMLInputElement;
@@ -44,6 +64,7 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
 
     field.classList.add('bootstrap-search-field');
     if (this.options.multiSelect) {
+      ensureMultiSelectControlStyles();
       field.classList.add('bootstrap-search-multiselect-input', 'border-0', 'shadow-none', 'p-0', 'm-0', 'bg-transparent');
       field.style.flex = '1 1 10rem';
       field.style.minWidth = '8rem';
@@ -208,12 +229,10 @@ export class BootstrapSearch<TItem = Record<string, unknown>> {
     this.field.addEventListener('input', () => this.handleInput());
     this.field.addEventListener('keydown', (event) => this.handleKeydown(event));
     this.field.addEventListener('focus', () => {
-      this.multiSelectControl?.classList.add('border-primary');
       if (toArray(this.options.data).length) {
         this.renderIfNeeded();
       }
     });
-    this.field.addEventListener('blur', () => this.multiSelectControl?.classList.remove('border-primary'));
 
     document.addEventListener('click', (event) => {
       const target = event.target as Node;
